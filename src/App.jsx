@@ -2,6 +2,16 @@ import { useMemo, useState } from 'react'
 
 const DATA = {
   과학: {
+    '학습지': {
+      '과학 N03 소화 기관과 소화 과정': {
+        images: ['/worksheets/science-n03.jpg'],
+        quiz: [],
+      },
+      '과학 N04 소장에서의 소화와 흡수': {
+        images: ['/worksheets/science-n04.jpg'],
+        quiz: [],
+      },
+    },
     '2단원': {
       '지권의 구성': {
         summary: [
@@ -75,18 +85,19 @@ const DATA = {
         detail: ['오줌관은 오줌을 방광으로 보낸다.', '방광은 오줌을 잠시 저장한다.', '요도는 오줌을 몸 밖으로 내보내는 통로이다.', '배설은 몸속 환경을 일정하게 유지하는 데 중요하다.'],
         quiz: [['혈액 속 노폐물을 걸러 오줌을 만드는 기관은?', '콩팥'], ['오줌을 잠시 저장하는 기관은?', '방광']],
       },
-      '학습지 PDF': {
-        summary: [],
-        detail: [],
-        quiz: [],
-        pdfs: [
-          { title: '과학 N03 - 소화 기관과 소화 과정', url: '/worksheets/science-digestion.pdf' },
-          { title: '과학 N04 - 소장에서의 소화와 영양소 흡수', url: '/worksheets/science-digestion.pdf' },
-        ],
-      },
     },
   },
   수학: {
+    '학습지': {
+      '수학 3-1 일차부등식': {
+        images: ['/worksheets/math-3-1.jpg'],
+        quiz: [],
+      },
+      '수학 3-2 일차부등식': {
+        images: ['/worksheets/math-3-2.jpg'],
+        quiz: [],
+      },
+    },
     시험범위: {
       일차부등식: {
         summary: ['부등식은 >, <, ≥, ≤를 사용하여 수의 크기를 나타낸 식이다.', '음수를 곱하거나 나누면 부등호 방향이 바뀐다.'],
@@ -103,18 +114,23 @@ const DATA = {
         detail: ['기울기 = y의 증가량 / x의 증가량', 'a > 0이면 오른쪽 위로 올라가고, a < 0이면 오른쪽 아래로 내려간다.'],
         quiz: [['y = 3x - 2에서 기울기는?', '3']],
       },
-      '학습지 PDF': {
-        summary: [],
-        detail: [],
-        quiz: [],
-        pdfs: [
-          { title: '수학 3-1 - 일차부등식', url: '/worksheets/math-inequality.pdf' },
-          { title: '수학 3-2 - 일차부등식 심화', url: '/worksheets/math-inequality.pdf' },
-        ],
-      },
     },
   },
   영어: {
+    '학습지': {
+      '단어 학습지': {
+        images: ['/worksheets/english-vocabulary.jpg'],
+        quiz: [],
+      },
+      '문법 학습지': {
+        images: ['/worksheets/english-grammar.jpg'],
+        quiz: [],
+      },
+      '대화문 학습지': {
+        images: ['/worksheets/english-dialogue-1.jpg', '/worksheets/english-dialogue-2.jpg'],
+        quiz: [],
+      },
+    },
     'Lesson 03': {
       '본문 요약': {
         summary: ['Necessity Is the Mother of Invention: 필요는 발명의 어머니이다.', '본문은 필요 때문에 만들어진 발명품을 소개한다.'],
@@ -125,31 +141,6 @@ const DATA = {
         summary: ['수동태: be동사 + 과거분사(p.p.)', "had to는 have p.p.가 아니라 '~해야 했다'라는 뜻이다."],
         detail: ['In those days, people rode horses, but many horses were killed for food.', 'Whiteout was invented by Bette Graham in 1956.', 'The first webcam was invented to watch a coffee pot.', 'At that time, people had to type the whole page when they made even a small mistake.', 'So, they had to make many disappointing trips to the empty coffee pot.'],
         quiz: [['was invented는 무슨 문법일까?', '수동태'], ['had to의 뜻은?', '해야 했다']],
-      },
-      '단어 학습지 PDF': {
-        summary: [],
-        detail: [],
-        quiz: [],
-        pdfs: [
-          { title: 'Lesson 3 Crossword Puzzle', url: '/worksheets/english-vocabulary.pdf' },
-        ],
-      },
-      '문법 학습지 PDF': {
-        summary: [],
-        detail: [],
-        quiz: [],
-        pdfs: [
-          { title: 'Lesson 4 Grammar', url: '/worksheets/english-grammar.pdf' },
-        ],
-      },
-      '대화문 학습지 PDF': {
-        summary: [],
-        detail: [],
-        quiz: [],
-        pdfs: [
-          { title: 'Lesson 3 Listen and Talk A', url: '/worksheets/english-dialogue.pdf' },
-          { title: 'Lesson 3 Listen and Talk B', url: '/worksheets/english-dialogue.pdf' },
-        ],
       },
     },
   },
@@ -243,7 +234,7 @@ function App() {
     return found.slice(0, 3).join('\n\n')
   }
 
-  const askAI = async () => {
+  const ask = async () => {
     if (!question.trim()) {
       setAiAnswer('질문을 먼저 입력해줘.')
       return
@@ -262,7 +253,7 @@ function App() {
       const data = await res.json()
 
       if (!res.ok) {
-        setAiAnswer(data.error || 'AI 답변 요청에 실패했어.')
+        setAiAnswer(data.error || ' 답변 요청에 실패했어.')
         return
       }
 
@@ -279,8 +270,8 @@ function App() {
   return (
     <div>
       <div className="header">
-        <h1>중2 2학기 기말고사</h1>
-        <p>과목별 PDF 학습지 + 개념 정리 + 문제 + AI 질문 답변</p>
+        <h1>중2 2학기 기말고사 대비 학습장</h1>
+        <p>학습지 사진 + 개념 정리 + 문제 + 질문 답변</p>
       </div>
 
       <div className="container">
@@ -327,33 +318,23 @@ function App() {
 
               <div className="box">
                 <h2>{category}</h2>
-                {current.summary && current.summary.length > 0 && (
+                {current.images ? (
+                  <div className="worksheetGallery">
+                    {current.images.map((src, i) => (
+                      <img className="worksheetImage" src={src} alt={`${category} ${i + 1}`} key={i} />
+                    ))}
+                  </div>
+                ) : (
                   <>
                     <h3>핵심 요약</h3>
                     <ul>{current.summary.map((x, i) => <li key={i}>{x}</li>)}</ul>
-                  </>
-                )}
-                {current.detail && current.detail.length > 0 && (
-                  <>
                     <h3>자세한 설명</h3>
                     <ul>{current.detail.map((x, i) => <li key={i}>{x}</li>)}</ul>
                   </>
                 )}
-                {current.pdfs && current.pdfs.length > 0 && (
-                  <>
-                    <h3>학습지 PDF</h3>
-                    <div className="row">
-                      {current.pdfs.map((pdf, i) => (
-                        <a className="smallBtn active" key={i} href={pdf.url} target="_blank" rel="noreferrer">
-                          {pdf.title} 열기
-                        </a>
-                      ))}
-                    </div>
-                  </>
-                )}
               </div>
 
-              {current.quiz && current.quiz.length > 0 && (
+              {current.quiz.length > 0 && (
               <div className="quiz">
                 <h3>간단한 문제</h3>
                 {current.quiz.map(([q, a], i) => {
@@ -396,17 +377,17 @@ function App() {
             </div>
 
             <div className="card">
-              <h2>AI 질문 답변</h2>
+              <h2>질문 답변</h2>
               <p>친구들은 API 키를 입력하지 않아도 돼. 키는 Netlify 환경변수에 숨겨서 사용해.</p>
               <input value={model} onChange={e => setModel(e.target.value)} placeholder="모델명 예: openrouter/free" />
               <textarea value={question} onChange={e => setQuestion(e.target.value)} placeholder="예: 폐동맥과 폐정맥 차이 알려줘" />
-              <button className="smallBtn active" onClick={askAI}>{loading ? '답변 생성 중...' : '질문하기'}</button>
+              <button className="smallBtn active" onClick={ask}>{loading ? '답변 생성 중...' : '질문하기'}</button>
               {aiAnswer && <div className="aiBox">{aiAnswer}</div>}
             </div>
 
             <div className="card">
               <h2>교과서 / 문제집 내용 추가</h2>
-              <p>PDF 내용은 복사해서 아래에 붙여넣으면 AI 질문 답변에 같이 사용돼.</p>
+              <p>추가 내용을 붙여넣으면 질문 답변에 같이 사용돼.</p>
               <textarea value={extra} onChange={e => setExtra(e.target.value)} placeholder="교과서 내용, 문제집 해설, 선생님 필기 붙여넣기" />
             </div>
           </div>

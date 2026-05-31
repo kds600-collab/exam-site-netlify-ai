@@ -94,3 +94,23 @@ textarea { min-height: 110px; }
 @media (max-width: 800px) {
   .grid { grid-template-columns: 1fr; }
 }
+
+.worksheetGallery {
+  display: grid;
+  gap: 18px;
+}
+
+.worksheetImage {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  background: white;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+@media (max-width: 800px) {
+  .worksheetImage {
+    max-width: 100%;
+  }
+}
