@@ -130,6 +130,28 @@ const DATA = {
   },
 }
 
+const WORKSHEETS = {
+  과학: [
+    { title: '과학 학습지 N03 - 소화 기관과 소화 과정', note: '소화관, 소화샘, 음식물 이동 경로, 입·위에서의 소화' },
+    { title: '과학 학습지 N04 - 소장에서의 소화와 영양소 흡수', note: '이자액, 쓸개즙, 소장 융털, 영양소 흡수, 물의 흡수' },
+  ],
+  수학: [
+    { title: '수학 학습지 3-1 - 일차부등식', note: '부등식의 값의 범위, x+y, x-y, xy의 범위' },
+    { title: '수학 학습지 3-2 - 일차부등식 심화', note: '문자 a, b, k가 포함된 부등식과 범위 문제' },
+  ],
+  영어: [
+    { title: '영어 단어 학습지 - Lesson 3 Crossword Puzzle', note: 'disappointing, solution, wheel, huge, volcano, crop, necessity, correct, invent, explode 등' },
+    { title: '영어 문법 학습지 - Lesson 4', note: '주격 관계대명사 who/which/that, 접속사 if' },
+    { title: '영어 대화문 학습지 - Lesson 3 Listen and Talk', note: 'Are you sure?, I’m quite sure, What will the weather be like?, What’s your favorite?, Which team?' },
+  ],
+  국어: [
+    { title: '국어 학습지', note: '엄마 걱정, 화자와 서술자, 작품 속 말하는 이 정리' },
+  ],
+  역사: [
+    { title: '역사 학습지 추가 예정', note: '역사 시험범위를 보내면 연표, 인물, 사건 중심으로 추가 가능' },
+  ],
+}
+
 function norm(v) {
   return String(v || '').toLowerCase().replace(/\s/g, '').replace(/[.,!?]/g, '')
 }
@@ -139,6 +161,7 @@ function App() {
   const [unit, setUnit] = useState('2단원')
   const [category, setCategory] = useState('지권의 구성')
   const [answers, setAnswers] = useState({})
+  const [tries, setTries] = useState({})
   const [search, setSearch] = useState('')
   const [model, setModel] = useState('openrouter/free')
   const [question, setQuestion] = useState('')
@@ -172,6 +195,7 @@ function App() {
     setUnit(firstUnit)
     setCategory(firstCat)
     setAnswers({})
+    setTries({})
   }
 
   const changeUnit = (u) => {
@@ -179,6 +203,7 @@ function App() {
     setUnit(u)
     setCategory(firstCat)
     setAnswers({})
+    setTries({})
   }
 
   const localAnswer = () => {
@@ -233,8 +258,8 @@ function App() {
   return (
     <div>
       <div className="header">
-        <h1>중2 시험공부 AI 사이트</h1>
-        <p>과목별 개념 정리 + 문제 + 질문 답변</p>
+        <h1>중2 2학기 기말고사</h1>
+        <p>과목별 학습지 모음 + 개념 정리 + 문제 + AI 질문 답변</p>
       </div>
 
       <div className="container">
@@ -242,6 +267,28 @@ function App() {
           <b>시험범위</b>
           <div>
             {Object.keys(DATA).map(s => <span className="tag" key={s}>{s}</span>)}
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>과목별 학습지 모음</h2>
+          <p>과목을 누르면 그 과목 학습지만 따로 볼 수 있어. 영어는 단어 → 문법 → 대화문 순서야.</p>
+          <div className="row">
+            {Object.keys(WORKSHEETS).map(s => (
+              <button className={subject === s ? 'smallBtn active' : 'smallBtn'} key={s} onClick={() => changeSubject(s)}>
+                {s}
+              </button>
+            ))}
+          </div>
+          <div className="box">
+            <h3>{subject} 학습지</h3>
+            <ul>
+              {WORKSHEETS[subject].map((sheet, i) => (
+                <li key={i}>
+                  <b>{sheet.title}</b> - {sheet.note}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -275,7 +322,7 @@ function App() {
               <h3>카테고리</h3>
               <div className="row">
                 {categoryNames.map(c => (
-                  <button className={category === c ? 'smallBtn active' : 'smallBtn'} key={c} onClick={() => { setCategory(c); setAnswers({}) }}>{c}</button>
+                  <button className={category === c ? 'smallBtn active' : 'smallBtn'} key={c} onClick={() => { setCategory(c); setAnswers({}); setTries({}) }}>{c}</button>
                 ))}
               </div>
 
@@ -291,13 +338,36 @@ function App() {
                 <h3>간단한 문제</h3>
                 {current.quiz.map(([q, a], i) => {
                   const user = answers[i] || ''
-                  const checked = user.length > 0
-                  const ok = checked && norm(user) === norm(a)
+                  const userText = norm(user)
+                  const answerText = norm(a)
+                  const checked = (tries[i] || 0) > 0
+                  const tooShort = userText.length < Math.min(2, answerText.length)
+                  const ok = checked && userText === answerText
+
+                  let message = ''
+                  let className = 'answer'
+                  if (checked && tooShort) {
+                    message = '두 글자 이상 입력해줘.'
+                    className = 'answer bad'
+                  } else if (checked && ok) {
+                    message = '정답!'
+                    className = 'answer good'
+                  } else if (checked) {
+                    message = '오답'
+                    className = 'answer bad'
+                  }
+
                   return (
                     <div key={i} style={{marginBottom: 14}}>
                       <b>{i + 1}. {q}</b>
                       <input value={user} onChange={e => setAnswers({...answers, [i]: e.target.value})} placeholder="정답 입력" />
-                      {checked && <div className={ok ? 'answer good' : 'answer bad'}>{ok ? '정답!' : `오답. 정답: ${a}`}</div>}
+                      <button
+                        className="smallBtn"
+                        onClick={() => setTries({...tries, [i]: (tries[i] || 0) + 1})}
+                      >
+                        채점하기
+                      </button>
+                      {checked && <div className={className}>{message}</div>}
                     </div>
                   )
                 })}
