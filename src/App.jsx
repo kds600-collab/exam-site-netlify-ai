@@ -2,16 +2,6 @@ import { useMemo, useState } from 'react'
 
 const DATA = {
   과학: {
-    '학습지': {
-      '과학 N03 소화 기관과 소화 과정': {
-        images: ['/worksheets/science-n03.jpg'],
-        quiz: [],
-      },
-      '과학 N04 소장에서의 소화와 흡수': {
-        images: ['/worksheets/science-n04.jpg'],
-        quiz: [],
-      },
-    },
     '2단원': {
       '지권의 구성': {
         summary: [
@@ -88,16 +78,6 @@ const DATA = {
     },
   },
   수학: {
-    '학습지': {
-      '수학 3-1 일차부등식': {
-        images: ['/worksheets/math-3-1.jpg'],
-        quiz: [],
-      },
-      '수학 3-2 일차부등식': {
-        images: ['/worksheets/math-3-2.jpg'],
-        quiz: [],
-      },
-    },
     시험범위: {
       일차부등식: {
         summary: ['부등식은 >, <, ≥, ≤를 사용하여 수의 크기를 나타낸 식이다.', '음수를 곱하거나 나누면 부등호 방향이 바뀐다.'],
@@ -117,20 +97,6 @@ const DATA = {
     },
   },
   영어: {
-    '학습지': {
-      '단어 학습지': {
-        images: ['/worksheets/english-vocabulary.jpg'],
-        quiz: [],
-      },
-      '문법 학습지': {
-        images: ['/worksheets/english-grammar.jpg'],
-        quiz: [],
-      },
-      '대화문 학습지': {
-        images: ['/worksheets/english-dialogue-1.jpg', '/worksheets/english-dialogue-2.jpg'],
-        quiz: [],
-      },
-    },
     'Lesson 03': {
       '본문 요약': {
         summary: ['Necessity Is the Mother of Invention: 필요는 발명의 어머니이다.', '본문은 필요 때문에 만들어진 발명품을 소개한다.'],
@@ -162,6 +128,28 @@ const DATA = {
       },
     },
   },
+}
+
+const WORKSHEETS = {
+  과학: [
+    { title: '과학 학습지 N03 - 소화 기관과 소화 과정', note: '소화관, 소화샘, 음식물 이동 경로, 입·위에서의 소화' },
+    { title: '과학 학습지 N04 - 소장에서의 소화와 영양소 흡수', note: '이자액, 쓸개즙, 소장 융털, 영양소 흡수, 물의 흡수' },
+  ],
+  수학: [
+    { title: '수학 학습지 3-1 - 일차부등식', note: '부등식의 값의 범위, x+y, x-y, xy의 범위' },
+    { title: '수학 학습지 3-2 - 일차부등식 심화', note: '문자 a, b, k가 포함된 부등식과 범위 문제' },
+  ],
+  영어: [
+    { title: '영어 단어 학습지 - Lesson 3 Crossword Puzzle', note: 'disappointing, solution, wheel, huge, volcano, crop, necessity, correct, invent, explode 등' },
+    { title: '영어 문법 학습지 - Lesson 4', note: '주격 관계대명사 who/which/that, 접속사 if' },
+    { title: '영어 대화문 학습지 - Lesson 3 Listen and Talk', note: 'Are you sure?, I’m quite sure, What will the weather be like?, What’s your favorite?, Which team?' },
+  ],
+  국어: [
+    { title: '국어 학습지', note: '엄마 걱정, 화자와 서술자, 작품 속 말하는 이 정리' },
+  ],
+  역사: [
+    { title: '역사 학습지 추가 예정', note: '역사 시험범위를 보내면 연표, 인물, 사건 중심으로 추가 가능' },
+  ],
 }
 
 function norm(v) {
@@ -234,7 +222,7 @@ function App() {
     return found.slice(0, 3).join('\n\n')
   }
 
-  const ask = async () => {
+  const askAI = async () => {
     if (!question.trim()) {
       setAiAnswer('질문을 먼저 입력해줘.')
       return
@@ -253,7 +241,7 @@ function App() {
       const data = await res.json()
 
       if (!res.ok) {
-        setAiAnswer(data.error || ' 답변 요청에 실패했어.')
+        setAiAnswer(data.error || 'AI 답변 요청에 실패했어.')
         return
       }
 
@@ -270,8 +258,8 @@ function App() {
   return (
     <div>
       <div className="header">
-        <h1>중2 2학기 기말고사 대비 학습장</h1>
-        <p>학습지 사진 + 개념 정리 + 문제 + 질문 답변</p>
+        <h1>중2 2학기 기말고사</h1>
+        <p>과목별 학습지 · 개념 정리 · 문제 · 질문 답변</p>
       </div>
 
       <div className="container">
@@ -279,6 +267,28 @@ function App() {
           <b>시험범위</b>
           <div>
             {Object.keys(DATA).map(s => <span className="tag" key={s}>{s}</span>)}
+          </div>
+        </div>
+
+        <div className="card">
+          <h2>과목별 학습지 모음</h2>
+          <p>과목을 누르면 그 과목 학습지만 따로 볼 수 있어. 영어는 단어 → 문법 → 대화문 순서야.</p>
+          <div className="row">
+            {Object.keys(WORKSHEETS).map(s => (
+              <button className={subject === s ? 'smallBtn active' : 'smallBtn'} key={s} onClick={() => changeSubject(s)}>
+                {s}
+              </button>
+            ))}
+          </div>
+          <div className="box">
+            <h3>{subject} 학습지</h3>
+            <ul>
+              {WORKSHEETS[subject].map((sheet, i) => (
+                <li key={i}>
+                  <b>{sheet.title}</b> - {sheet.note}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -318,23 +328,12 @@ function App() {
 
               <div className="box">
                 <h2>{category}</h2>
-                {current.images ? (
-                  <div className="worksheetGallery">
-                    {current.images.map((src, i) => (
-                      <img className="worksheetImage" src={src} alt={`${category} ${i + 1}`} key={i} />
-                    ))}
-                  </div>
-                ) : (
-                  <>
-                    <h3>핵심 요약</h3>
-                    <ul>{current.summary.map((x, i) => <li key={i}>{x}</li>)}</ul>
-                    <h3>자세한 설명</h3>
-                    <ul>{current.detail.map((x, i) => <li key={i}>{x}</li>)}</ul>
-                  </>
-                )}
+                <h3>핵심 요약</h3>
+                <ul>{current.summary.map((x, i) => <li key={i}>{x}</li>)}</ul>
+                <h3>자세한 설명</h3>
+                <ul>{current.detail.map((x, i) => <li key={i}>{x}</li>)}</ul>
               </div>
 
-              {current.quiz.length > 0 && (
               <div className="quiz">
                 <h3>간단한 문제</h3>
                 {current.quiz.map(([q, a], i) => {
@@ -373,7 +372,6 @@ function App() {
                   )
                 })}
               </div>
-              )}
             </div>
 
             <div className="card">
@@ -381,13 +379,13 @@ function App() {
               <p>친구들은 API 키를 입력하지 않아도 돼. 키는 Netlify 환경변수에 숨겨서 사용해.</p>
               <input value={model} onChange={e => setModel(e.target.value)} placeholder="모델명 예: openrouter/free" />
               <textarea value={question} onChange={e => setQuestion(e.target.value)} placeholder="예: 폐동맥과 폐정맥 차이 알려줘" />
-              <button className="smallBtn active" onClick={ask}>{loading ? '답변 생성 중...' : '질문하기'}</button>
+              <button className="smallBtn active" onClick={askAI}>{loading ? '답변 생성 중...' : '질문하기'}</button>
               {aiAnswer && <div className="aiBox">{aiAnswer}</div>}
             </div>
 
             <div className="card">
               <h2>교과서 / 문제집 내용 추가</h2>
-              <p>추가 내용을 붙여넣으면 질문 답변에 같이 사용돼.</p>
+              <p>PDF 내용은 복사해서 아래에 붙여넣으면 질문 답변에 같이 사용돼.</p>
               <textarea value={extra} onChange={e => setExtra(e.target.value)} placeholder="교과서 내용, 문제집 해설, 선생님 필기 붙여넣기" />
             </div>
           </div>
