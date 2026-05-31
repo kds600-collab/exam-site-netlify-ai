@@ -75,6 +75,15 @@ const DATA = {
         detail: ['오줌관은 오줌을 방광으로 보낸다.', '방광은 오줌을 잠시 저장한다.', '요도는 오줌을 몸 밖으로 내보내는 통로이다.', '배설은 몸속 환경을 일정하게 유지하는 데 중요하다.'],
         quiz: [['혈액 속 노폐물을 걸러 오줌을 만드는 기관은?', '콩팥'], ['오줌을 잠시 저장하는 기관은?', '방광']],
       },
+      '학습지 PDF': {
+        summary: [],
+        detail: [],
+        quiz: [],
+        pdfs: [
+          { title: '과학 N03 - 소화 기관과 소화 과정', url: '/worksheets/science-digestion.pdf' },
+          { title: '과학 N04 - 소장에서의 소화와 영양소 흡수', url: '/worksheets/science-digestion.pdf' },
+        ],
+      },
     },
   },
   수학: {
@@ -94,6 +103,15 @@ const DATA = {
         detail: ['기울기 = y의 증가량 / x의 증가량', 'a > 0이면 오른쪽 위로 올라가고, a < 0이면 오른쪽 아래로 내려간다.'],
         quiz: [['y = 3x - 2에서 기울기는?', '3']],
       },
+      '학습지 PDF': {
+        summary: [],
+        detail: [],
+        quiz: [],
+        pdfs: [
+          { title: '수학 3-1 - 일차부등식', url: '/worksheets/math-inequality.pdf' },
+          { title: '수학 3-2 - 일차부등식 심화', url: '/worksheets/math-inequality.pdf' },
+        ],
+      },
     },
   },
   영어: {
@@ -107,6 +125,31 @@ const DATA = {
         summary: ['수동태: be동사 + 과거분사(p.p.)', "had to는 have p.p.가 아니라 '~해야 했다'라는 뜻이다."],
         detail: ['In those days, people rode horses, but many horses were killed for food.', 'Whiteout was invented by Bette Graham in 1956.', 'The first webcam was invented to watch a coffee pot.', 'At that time, people had to type the whole page when they made even a small mistake.', 'So, they had to make many disappointing trips to the empty coffee pot.'],
         quiz: [['was invented는 무슨 문법일까?', '수동태'], ['had to의 뜻은?', '해야 했다']],
+      },
+      '단어 학습지 PDF': {
+        summary: [],
+        detail: [],
+        quiz: [],
+        pdfs: [
+          { title: 'Lesson 3 Crossword Puzzle', url: '/worksheets/english-vocabulary.pdf' },
+        ],
+      },
+      '문법 학습지 PDF': {
+        summary: [],
+        detail: [],
+        quiz: [],
+        pdfs: [
+          { title: 'Lesson 4 Grammar', url: '/worksheets/english-grammar.pdf' },
+        ],
+      },
+      '대화문 학습지 PDF': {
+        summary: [],
+        detail: [],
+        quiz: [],
+        pdfs: [
+          { title: 'Lesson 3 Listen and Talk A', url: '/worksheets/english-dialogue.pdf' },
+          { title: 'Lesson 3 Listen and Talk B', url: '/worksheets/english-dialogue.pdf' },
+        ],
       },
     },
   },
@@ -128,28 +171,6 @@ const DATA = {
       },
     },
   },
-}
-
-const WORKSHEETS = {
-  과학: [
-    { title: '과학 학습지 N03 - 소화 기관과 소화 과정', note: '소화관, 소화샘, 음식물 이동 경로, 입·위에서의 소화' },
-    { title: '과학 학습지 N04 - 소장에서의 소화와 영양소 흡수', note: '이자액, 쓸개즙, 소장 융털, 영양소 흡수, 물의 흡수' },
-  ],
-  수학: [
-    { title: '수학 학습지 3-1 - 일차부등식', note: '부등식의 값의 범위, x+y, x-y, xy의 범위' },
-    { title: '수학 학습지 3-2 - 일차부등식 심화', note: '문자 a, b, k가 포함된 부등식과 범위 문제' },
-  ],
-  영어: [
-    { title: '영어 단어 학습지 - Lesson 3 Crossword Puzzle', note: 'disappointing, solution, wheel, huge, volcano, crop, necessity, correct, invent, explode 등' },
-    { title: '영어 문법 학습지 - Lesson 4', note: '주격 관계대명사 who/which/that, 접속사 if' },
-    { title: '영어 대화문 학습지 - Lesson 3 Listen and Talk', note: 'Are you sure?, I’m quite sure, What will the weather be like?, What’s your favorite?, Which team?' },
-  ],
-  국어: [
-    { title: '국어 학습지', note: '엄마 걱정, 화자와 서술자, 작품 속 말하는 이 정리' },
-  ],
-  역사: [
-    { title: '역사 학습지 추가 예정', note: '역사 시험범위를 보내면 연표, 인물, 사건 중심으로 추가 가능' },
-  ],
 }
 
 function norm(v) {
@@ -259,7 +280,7 @@ function App() {
     <div>
       <div className="header">
         <h1>중2 2학기 기말고사</h1>
-        <p>과목별 학습지 모음 + 개념 정리 + 문제 + AI 질문 답변</p>
+        <p>과목별 PDF 학습지 + 개념 정리 + 문제 + AI 질문 답변</p>
       </div>
 
       <div className="container">
@@ -267,28 +288,6 @@ function App() {
           <b>시험범위</b>
           <div>
             {Object.keys(DATA).map(s => <span className="tag" key={s}>{s}</span>)}
-          </div>
-        </div>
-
-        <div className="card">
-          <h2>과목별 학습지 모음</h2>
-          <p>과목을 누르면 그 과목 학습지만 따로 볼 수 있어. 영어는 단어 → 문법 → 대화문 순서야.</p>
-          <div className="row">
-            {Object.keys(WORKSHEETS).map(s => (
-              <button className={subject === s ? 'smallBtn active' : 'smallBtn'} key={s} onClick={() => changeSubject(s)}>
-                {s}
-              </button>
-            ))}
-          </div>
-          <div className="box">
-            <h3>{subject} 학습지</h3>
-            <ul>
-              {WORKSHEETS[subject].map((sheet, i) => (
-                <li key={i}>
-                  <b>{sheet.title}</b> - {sheet.note}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
 
@@ -328,12 +327,33 @@ function App() {
 
               <div className="box">
                 <h2>{category}</h2>
-                <h3>핵심 요약</h3>
-                <ul>{current.summary.map((x, i) => <li key={i}>{x}</li>)}</ul>
-                <h3>자세한 설명</h3>
-                <ul>{current.detail.map((x, i) => <li key={i}>{x}</li>)}</ul>
+                {current.summary && current.summary.length > 0 && (
+                  <>
+                    <h3>핵심 요약</h3>
+                    <ul>{current.summary.map((x, i) => <li key={i}>{x}</li>)}</ul>
+                  </>
+                )}
+                {current.detail && current.detail.length > 0 && (
+                  <>
+                    <h3>자세한 설명</h3>
+                    <ul>{current.detail.map((x, i) => <li key={i}>{x}</li>)}</ul>
+                  </>
+                )}
+                {current.pdfs && current.pdfs.length > 0 && (
+                  <>
+                    <h3>학습지 PDF</h3>
+                    <div className="row">
+                      {current.pdfs.map((pdf, i) => (
+                        <a className="smallBtn active" key={i} href={pdf.url} target="_blank" rel="noreferrer">
+                          {pdf.title} 열기
+                        </a>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
+              {current.quiz && current.quiz.length > 0 && (
               <div className="quiz">
                 <h3>간단한 문제</h3>
                 {current.quiz.map(([q, a], i) => {
@@ -372,6 +392,7 @@ function App() {
                   )
                 })}
               </div>
+              )}
             </div>
 
             <div className="card">
