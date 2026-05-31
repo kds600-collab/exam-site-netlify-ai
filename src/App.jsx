@@ -222,8 +222,7 @@ function App() {
 
       setAiAnswer(data.answer || '답변을 불러오지 못했어.')
     } catch (err) {
-      setAiAnswer('오류가 났어. Netlify 배포 상태나 인터넷 연결을 확인해줘.
-' + err.message)
+      setAiAnswer('오류가 났어. Netlify 배포 상태나 인터넷 연결을 확인해줘.\\n' + err.message)
     } finally {
       setLoading(false)
     }
